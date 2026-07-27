@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Μόλα 76ου Σ.Π. Στροβόλου 2026-2027</title>
+<style>
+:root{--gold:#8F6B00;--green:#3D5F26;--red:#900000;--blue:#15558F;--sch:#37145A;--gen:#4E1F78;--nat:#5A5A5A;--camp:#0A5A5A;--badge:#5E2A08;--bd:#dcdcd6;--mut:#6b6b66}
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1c1c1a;margin:0;background:#e9efe6;font-size:13px}
+header{padding:14px 18px;background:#f4f8f1;border-bottom:2px solid #3D5F26;position:sticky;top:0;z-index:20}
+h1{font-size:17px;margin:0 0 8px;font-weight:600;color:#2b3a1c}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.btn{padding:5px 11px;border:1px solid var(--bd);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}
+.btn:hover{background:#f0efe9}
+.btn.act{background:#1c1c1a;color:#fff;border-color:#1c1c1a}
+.btn.pri{background:var(--gen);color:#fff;border-color:var(--gen)}
+.count{margin-left:auto;color:var(--mut);font-size:12px}
+main{display:flex;gap:0;align-items:flex-start}
+aside{width:210px;flex:none;padding:12px;position:sticky;top:80px;max-height:calc(100vh - 80px);overflow:auto;border-right:1px solid var(--bd);background:#f4f8f1}
+.cat{margin:0 0 3px}
+.catline{display:flex;align-items:center;gap:6px;padding:3px 4px;border-radius:6px;cursor:pointer}
+.catline:hover{background:#efeee8}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.catname{flex:1;font-weight:500}
+.catn{color:var(--mut);font-size:11px}
+.exp{cursor:pointer;color:var(--mut);width:14px;text-align:center;user-select:none}
+.subs{margin:0 0 4px 22px}
+.subline{display:flex;align-items:center;gap:6px;padding:2px 4px;border-radius:5px;cursor:pointer;font-size:12px;color:#333}
+.subline:hover{background:#efeee8}
+.wrap{flex:1;padding:12px 16px;overflow:auto}
+.month{margin:0 0 10px}
+.mlabel{font-size:12px;font-weight:600;color:var(--mut);letter-spacing:.03em;margin:0 0 4px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.cell{background:#fff;border:1px solid var(--bd);border-radius:8px;padding:6px 7px;min-height:52px}
+.cd{display:flex;justify-content:space-between;align-items:center;font-weight:600;color:#111;margin:0 0 3px}
+.addb{border:none;background:none;color:var(--mut);cursor:pointer;font-size:15px;line-height:1;padding:0 3px}
+.addb:hover{color:var(--blue)}
+.ent{display:flex;gap:5px;align-items:flex-start;font-size:12px;line-height:1.3;padding:1px 0}
+.ent.off .lab{opacity:.32;text-decoration:line-through}
+.ent input{margin:2px 0 0;flex:none}
+.lab{cursor:pointer;flex:1}
+.chip{font-size:9px;padding:0 4px;border:1px solid;border-radius:8px;margin-left:3px;white-space:nowrap;vertical-align:1px}
+.pen{cursor:pointer;color:var(--mut);font-size:12px;padding:0 2px;visibility:hidden}
+body.edit .pen{visibility:visible}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:50}
+.modal.on{display:flex}
+.box{background:#fff;border-radius:12px;padding:18px;width:420px;max-width:92vw;max-height:88vh;overflow:auto}
+.box h3{margin:0 0 10px;font-size:15px}
+.tagrow{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:12px;font-size:12px;color:#fff}
+.tag b{cursor:pointer;font-weight:400}
+select,input[type=text]{padding:5px 7px;border:1px solid var(--bd);border-radius:6px;font-size:13px;font-family:inherit}
+.hint{color:var(--mut);font-size:11px;margin:2px 0 8px}
+@media print{
+ header .row,aside,.addb,.pen,.actions{display:none!important}
+ header{position:static;border:none}aside{display:none}
+ .ent.off{display:none}.ent input{display:none}
+ body{background:#fff;font-size:10px}.wrap{padding:0}
+ .grid{gap:3px}.cell{min-height:40px}
+ @page{size:A4 landscape;margin:10mm}
+}
+</style>
+</head>
+<body>
+<header>
+ <h1>Πρόγραμμα Χρονιάς (Μόλα) · 76ο Σ.Π. Στροβόλου · 2026-2027 <span id='teamTag' style='font-size:12px;color:#3D5F26'></span></h1>
+ <div class="row">
+  <span style="color:var(--mut);font-size:12px">Άποψη:</span>
+  <button class="btn act" data-p="all">ΣΥΣΤΗΜΑ (όλα)</button>
+  <button class="btn" data-p="ΑΛ">ΑΛ</button>
+  <button class="btn" data-p="ΟΠ">ΟΠ</button>
+  <button class="btn" data-p="ΚΑ">ΚΑ</button>
+  <button class="btn" data-p="custom">Προσαρμογή</button>
+  <button class="btn" id="editBtn">✎ Επεξεργασία κατηγοριών</button>
+  <span style="color:var(--mut);font-size:12px;margin-left:8px">Πηγή:</span>
+  <button class="btn src act" data-s="ge">Γενική Εφορία</button>
+  <button class="btn src" data-s="anchor">Πάγια/76</button>
+  <button class="btn src" data-s="all">Όλα</button>
+  <span class="count" id="count"></span>
+ </div>
+ <div class="row actions" style="margin-top:8px">
+  <button class="btn" onclick="forceRead()">⟳ Force read (από βάση)</button>
+  <button class="btn pri" onclick="forceWrite()">💾 Force write (στη βάση)</button>
+  <span id="saveStatus" style="color:var(--mut);font-size:12px"></span>
+  <button class="btn" onclick="window.print()">🖨 Εκτύπωση επιλογής</button>
+  <button class="btn" onclick="selAll(1)">Επιλογή όλων</button>
+  <button class="btn" onclick="selAll(0)">Καμία</button>
+  <button class="btn pri" onclick="molaXlsx()">⬇ Εξαγωγή Excel (.xlsx)</button>
+  <button class="btn" onclick="expJSON()">⬇ Αποθήκευση (.json)</button>
+  <button class="btn" onclick="document.getElementById('imp').click()">⬆ Εισαγωγή</button>
+  <input id="imp" type="file" accept=".json" style="display:none" onchange="impJSON(this)">
+  <button class="btn" onclick="resetAll()">↺ Επαναφορά</button>
+ </div>
+</header>
+<main>
+ <aside id="filters"></aside>
+ <div class="wrap" id="grid"></div>
+</main>
+<div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+<script>
+const BASE=[{"label": "ΣΕΠΤΕΜΒΡΙΟΣ 2026", "sats": [{"date": "5", "entries": [{"id": 1, "t": "Πτυχία Δημοκρατίας (2/9, Τετ)", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}, {"id": 2, "t": "Κυβ. Ν/Π Σκάφους Α", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}, {"id": 3, "t": "Σεμ. Περιβάλλον", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}]}, {"date": "12", "entries": [{"id": 4, "t": "ΕΓΓΡΑΦΕΣ (παλιά & αδέλφια)", "tags": ["ΣΥΣΤΗΜΑ:Σημαντικά"], "b": false, "src": "ΠΑΓΙΟ"}, {"id": 5, "t": "ΕΝΑΡΞΗ Προσκοπικής Περιόδου", "tags": ["ΓΕΝΙΚΗ:Σημαντικά"], "b": true, "src": "ΓΕ"}, {"id": 6, "t": "ΣΠΕΒ 1", "tags": ["ΣΧΟΛΕΣ:ΣΠΕΒ"], "b": false, "src": "ΓΕ"}, {"id": 7, "t": "ΣΒΕΒΛ 1", "tags": ["ΣΧΟΛΕΣ:ΑΛ"], "b": true, "src": "ΓΕ"}]}, {"date": "19", "entries": [{"id": 8, "t": "ΕΓΓΡΑΦΕΣ (όλοι)", "tags": ["ΣΥΣΤΗΜΑ:Σημαντικά"], "b": false, "src": "ΠΑΓΙΟ"}, {"id": 9, "t": "Απονομή Χρυσού Τρίφυλλου", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}, {"id": 10, "t": "IC Networking (PL)", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}, {"id": 11, "t": "Προσκ. Διαβατήριο", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}, {"id": 12, "t": "ΣΠΕΒ 2", "tags": ["ΣΧΟΛΕΣ:ΣΠΕΒ"], "b": false, "src": "ΓΕ"}]}, {"date": "26", "entries": [{"id": 13, "t": "ΕΝΑΡΞΗ ΧΡΟΝΙΑΣ", "tags": ["ΣΥΣΤΗΜΑ:Εκδηλώσεις"], "b": false, "src": "ΠΑΓΙΟ"}, {"id": 14, "t": "Χρυσός Σεπτέμβρης – Μικροί Ήρωες (ΑΛ)", "tags": ["ΑΛ:Δράσεις"], "b": true, "src": "ΓΕ"}, {"id": 15, "t": "ΣΠΕΒ 3", "tags": ["ΣΧΟΛΕΣ:ΣΠΕΒ"], "b": false, "src": "ΓΕ"}, {"id": 16, "t": "ΣΒΕΒΠ 1", "tags": ["ΣΧΟΛΕΣ:ΟΠ"], "b": true, "src": "ΓΕ"}]}, {"date": null, "entries": []}]}, {"label": "ΟΚΤΩΒΡΙΟΣ 2026", "sats": [{"date": "3", "entries": [{"id": 17, "t": "Communications Forum (PL)", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}, {"id": 18, "t": "Φεστιβάλ ΟΝΕΚ", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}, {"id": 19, "t": "Κυβ. Ν/Π Σκάφους Β", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}, {"id": 20, "t": "ΣΒΕΒΜΑ", "tags": ["ΣΧΟΛΕΣ:ΑΛ"], "b": true, "src": "ΓΕ"}, {"id": 21, "t": "ΣΠΕΒ 4", "tags": ["ΣΧΟΛΕΣ:ΣΠΕΒ"], "b": false, "src": "ΓΕ"}]}, {"date": "10", "entries": [{"id": 22, "t": "Σχολή Σκαπανικής", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}, {"id": 23, "t": "ΣΒΕΒΑ", "tags": ["ΣΧΟΛΕΣ:ΚΑ"], "b": true, "src": "ΓΕ"}, {"id": 24, "t": "Α΄Βοήθειες 6ωρο", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}]}, {"date": "17", "entries": [{"id": 25, "t": "JOTA-JOTI", "tags": ["ΣΥΣΤΗΜΑ:Εκδηλώσεις"], "b": false, "src": "ΠΑΓΙΟ"}, {"id": 26, "t": "JOTA-JOTI", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}]}, {"date": "24", "entries": [{"id": 27, "t": "Σχολή Εκπαιδευτών", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}]}, {"date": "31", "entries": [{"id": 28, "t": "28 Επέτ. ΟΧΙ — Παρέλαση/Εωθινό (Τετ)", "tags": ["ΕΘΝΙΚΕΣ:Αργίες"], "b": false, "src": "ΠΑΓΙΟ"}, {"id": 29, "t": "Προσκ. Συνέδριο / Συναντήσεις Κλάδων (31/10–1/11, Σαβ–Κυρ)", "tags": ["ΓΕΝΙΚΗ:Σημαντικά"], "b": true, "src": "ΓΕ"}]}]}, {"label": "ΝΟΕΜΒΡΙΟΣ 2026", "sats": [{"date": "7", "entries": [{"id": 30, "t": "Παγκ. Συνάντηση Πτυχιούχων ΔΔ", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}, {"id": 31, "t": "Academy (PL)", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}, {"id": 32, "t": "Α΄Βοήθειες BLS", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}]}, {"date": "14", "entries": [{"id": 33, "t": "ΣΒΕΒΛ 2", "tags": ["ΣΧΟΛΕΣ:ΑΛ"], "b": true, "src": "ΓΕ"}, {"id": 34, "t": "ΔΔ Κοινό Μέρος", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}]}, {"date": "21", "entries": [{"id": 35, "t": "Σχολή Βοηθών Τμημάτων ΕΕ (21 & 22/11, Σαβ–Κυρ)", "tags": ["ΣΧΟΛΕΣ:Επαρχίας"], "b": false, "src": "ΓΕ"}]}, {"date": "28", "entries": [{"id": 36, "t": "Σχολή Βοηθών Τμημάτων ΕΕ (28 & 29/11, Σαβ–Κυρ)", "tags": ["ΣΧΟΛΕΣ:Επαρχίας"], "b": false, "src": "ΓΕ"}]}, {"date": null, "entries": []}]}, {"label": "ΔΕΚΕΜΒΡΙΟΣ 2026", "sats": [{"date": "5", "entries": [{"id": 37, "t": "ΣΕΕ Χειροτεχνίας", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}, {"id": 38, "t": "ΣΠΕΒ 5 (EN)", "tags": ["ΣΧΟΛΕΣ:ΣΠΕΒ"], "b": false, "src": "ΓΕ"}, {"id": 39, "t": "Αγ. Νικολάου (ΕΕ)", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}]}, {"date": "12", "entries": []}, {"date": "19", "entries": [{"id": 40, "t": "ΣΒΕΒ Δικτύου", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}, {"id": 41, "t": "ΣΠΕΒ 6", "tags": ["ΣΧΟΛΕΣ:ΣΠΕΒ"], "b": false, "src": "ΓΕ"}]}, {"date": "26", "entries": [{"id": 42, "t": "25 ΧΡΙΣΤΟΥΓΕΝΝΑ (Παρ)", "tags": ["ΕΘΝΙΚΕΣ:Αργίες"], "b": false, "src": "ΠΑΓΙΟ"}]}, {"date": null, "entries": []}]}, {"label": "ΙΑΝΟΥΑΡΙΟΣ 2027", "sats": [{"date": "2", "entries": [{"id": 43, "t": "1 Πρωτοχρονιά (Παρ)", "tags": ["ΕΘΝΙΚΕΣ:Αργίες"], "b": false, "src": "ΠΑΓΙΟ"}]}, {"date": "9", "entries": [{"id": 44, "t": "6 Θεοφάνεια — Φώτα (Τετ)", "tags": ["ΕΘΝΙΚΕΣ:Αργίες"], "b": false, "src": "ΠΑΓΙΟ"}, {"id": 45, "t": "Εργαστήρι Κλ. Λυκοπούλων", "tags": ["ΣΧΟΛΕΣ:ΑΛ"], "b": true, "src": "ΓΕ"}, {"id": 46, "t": "Συν. Εκπ. Ομάδας", "tags": ["ΟΠ:Δράσεις"], "b": true, "src": "ΓΕ"}]}, {"date": "16", "entries": [{"id": 47, "t": "ΣΒΕΒΠ 2", "tags": ["ΣΧΟΛΕΣ:ΟΠ"], "b": true, "src": "ΓΕ"}, {"id": 48, "t": "Α΄Βοήθειες 18ωρο", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}]}, {"date": "23", "entries": [{"id": 49, "t": "ΣΒΕΒ ΑΣ & Εφόρων", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}, {"id": 50, "t": "ΣΒΕΒΠ (EN)", "tags": ["ΣΧΟΛΕΣ:ΟΠ"], "b": true, "src": "ΓΕ"}]}, {"date": "30", "entries": [{"id": 51, "t": "Train the Trainer", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}]}]}, {"label": "ΦΕΒΡΟΥΑΡΙΟΣ 2027", "sats": [{"date": "6", "entries": [{"id": 52, "t": "ΔΔ Λυκοπούλων Α", "tags": ["ΑΛ:Δράσεις"], "b": true, "src": "ΓΕ"}, {"id": 53, "t": "ΔΔ Ανιχνευτών Α", "tags": ["ΚΑ:Δράσεις"], "b": true, "src": "ΓΕ"}]}, {"date": "13", "entries": []}, {"date": "20", "entries": [{"id": 54, "t": "Σεμ. Ένταξη & Συμπερίληψη", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}, {"id": 55, "t": "ΣΠΕΒ 7", "tags": ["ΣΧΟΛΕΣ:ΣΠΕΒ"], "b": false, "src": "ΓΕ"}]}, {"date": "27", "entries": [{"id": 56, "t": "22 Ημέρα Σκέψης (Δευ)", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": true, "src": "ΠΑΓΙΟ"}, {"id": 57, "t": "Ημέρα Προσκόπου (22/2, Δευ)", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}, {"id": 58, "t": "Train the Trainer 2", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}, {"id": 59, "t": "Απαιτήσεις Μαίανδρος Ι", "tags": ["ΚΑ:Δράσεις"], "b": true, "src": "ΓΕ"}, {"id": 60, "t": "Παγκ. Δράση Κλ. Προσκόπων", "tags": ["ΟΠ:Δράσεις"], "b": true, "src": "ΓΕ"}]}, {"date": null, "entries": []}]}, {"label": "ΜΑΡΤΙΟΣ 2027", "sats": [{"date": "6", "entries": [{"id": 61, "t": "Εργ. Φακέλων Κατασκ.", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}, {"id": 62, "t": "Σχολή Παιχνίδι-Τραγούδι", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}]}, {"date": "13", "entries": []}, {"date": "20", "entries": [{"id": 63, "t": "15 Καθαρά Δευτέρα (Δευ)", "tags": ["ΕΘΝΙΚΕΣ:Αργίες"], "b": false, "src": "ΠΑΓΙΟ"}, {"id": 64, "t": "ΔΔ Λυκοπούλων Β", "tags": ["ΑΛ:Δράσεις"], "b": true, "src": "ΓΕ"}, {"id": 65, "t": "ΔΔ Ανιχνευτών Β", "tags": ["ΚΑ:Δράσεις"], "b": true, "src": "ΓΕ"}]}, {"date": "27", "entries": [{"id": 66, "t": "25 Παλιγγενεσία — Εωθινό (Πεμ)", "tags": ["ΕΘΝΙΚΕΣ:Αργίες"], "b": false, "src": "ΠΑΓΙΟ"}]}, {"date": null, "entries": []}]}, {"label": "ΑΠΡΙΛΙΟΣ 2027", "sats": [{"date": "3", "entries": [{"id": 67, "t": "1 1η Απρ — Λαμπαδηφορία (Πεμ)", "tags": ["ΕΘΝΙΚΕΣ:Αργίες"], "b": false, "src": "ΠΑΓΙΟ"}]}, {"date": "10", "entries": [{"id": 68, "t": "Σχολή Α/Π Προπαίδειας", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}, {"id": 69, "t": "Σχολή Τοπογραφίας", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}]}, {"date": "17", "entries": [{"id": 70, "t": "Α΄Βοήθειες 6ωρο", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}, {"id": 71, "t": "Σχολή ΜΔΥ", "tags": ["ΣΧΟΛΕΣ:ΚΑ"], "b": true, "src": "ΓΕ"}, {"id": 72, "t": "Σχολή Αρχηγών Κατασκηνώσεων", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}]}, {"date": "24", "entries": [{"id": 73, "t": "Εορτασμοί Αγ. Γεωργίου", "tags": ["ΓΕΝΙΚΗ:Σημαντικά"], "b": true, "src": "ΓΕ"}, {"id": 74, "t": "Μαίανδρος ΙΙ", "tags": ["ΚΑ:Δράσεις"], "b": true, "src": "ΓΕ"}]}, {"date": null, "entries": []}]}, {"label": "ΜΑΙΟΣ 2027", "sats": [{"date": "1", "entries": [{"id": 75, "t": "30 Μ. Παρασκευή (Παρ)", "tags": ["ΕΘΝΙΚΕΣ:Αργίες"], "b": false, "src": "ΠΑΓΙΟ"}, {"id": 76, "t": "Πρωτομαγιά", "tags": ["ΕΘΝΙΚΕΣ:Αργίες"], "b": false, "src": "ΠΑΓΙΟ"}]}, {"date": "8", "entries": [{"id": 77, "t": "2 ΠΑΣΧΑ (Κυρ)", "tags": ["ΕΘΝΙΚΕΣ:Αργίες"], "b": false, "src": "ΠΑΓΙΟ"}, {"id": 78, "t": "ΣΠΕΒ 8", "tags": ["ΣΧΟΛΕΣ:ΣΠΕΒ"], "b": false, "src": "ΓΕ"}, {"id": 79, "t": "ΣΒΕΒΛ 3", "tags": ["ΣΧΟΛΕΣ:ΑΛ"], "b": true, "src": "ΓΕ"}]}, {"date": "15", "entries": [{"id": 80, "t": "Safe from Harm ΕΕ (14 & 15/5, Παρ–Σαβ)", "tags": ["ΣΧΟΛΕΣ:Επαρχίας"], "b": false, "src": "ΓΕ"}, {"id": 81, "t": "Σχολή Παραστατών", "tags": ["ΣΧΟΛΕΣ:Άλλες"], "b": false, "src": "ΓΕ"}]}, {"date": "22", "entries": [{"id": 82, "t": "Safe from Harm ΕΕ (21 & 22/5, Παρ–Σαβ)", "tags": ["ΣΧΟΛΕΣ:Επαρχίας"], "b": false, "src": "ΓΕ"}]}, {"date": "29", "entries": [{"id": 83, "t": "Προετοιμασίες Κατασκηνωτικών Χώρων", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}]}]}, {"label": "ΙΟΥΝΙΟΣ 2027", "sats": [{"date": "5", "entries": [{"id": 84, "t": "Προετοιμασίες Κατασκ. Χώρων", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}, {"id": 85, "t": "Γενική Συνέλευση", "tags": ["ΓΕΝΙΚΗ:Σημαντικά"], "b": true, "src": "ΓΕ"}, {"id": 86, "t": "Παγκ. Κατασκ. Μικρών Αγελών", "tags": ["ΑΛ:Δράσεις"], "b": true, "src": "ΓΕ"}]}, {"date": "12", "entries": [{"id": 87, "t": "Προετοιμασίες Κατασκηνωτικών Χώρων", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}]}, {"date": "19", "entries": [{"id": 88, "t": "Έναρξη κατασκηνωτικής περιόδου", "tags": ["ΓΕΝΙΚΗ:Σημαντικά"], "b": true, "src": "ΓΕ"}, {"id": 89, "t": "Τριήμερο Κατακλυσμού", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}]}, {"date": "26", "entries": [{"id": 90, "t": "20 Κατακλυσμός (Κυρ)", "tags": ["ΕΘΝΙΚΕΣ:Αργίες"], "b": false, "src": "ΠΑΓΙΟ"}]}, {"date": null, "entries": []}]}, {"label": "ΙΟΥΛΙΟΣ 2027", "sats": [{"date": "3", "entries": []}, {"date": "10", "entries": []}, {"date": "17", "entries": []}, {"date": "24", "entries": [{"id": 91, "t": "Εκδήλωση Τύμβος (20/7, Τρι)", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}]}, {"date": "31", "entries": [{"id": 92, "t": "World Scout Jamboree (PL) 30/7-8/8", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}]}]}, {"label": "ΑΥΓΟΥΣΤΟΣ 2027", "sats": [{"date": "7", "entries": []}, {"date": "14", "entries": []}, {"date": "21", "entries": []}, {"date": "28", "entries": [{"id": 93, "t": "Reggata 2027 (Ν/Π)", "tags": ["ΓΕΝΙΚΗ:Δράσεις"], "b": false, "src": "ΓΕ"}]}, {"date": null, "entries": []}]}];
+const MAINS={
+ 'ΣΥΣΤΗΜΑ':{c:'#15558F',subs:['Εκδηλώσεις','Σημαντικά']},
+ 'ΑΛ':{c:'#8F6B00',subs:['Δράσεις','Σημαντικά','Πρόγραμμα']},
+ 'ΟΠ':{c:'#3D5F26',subs:['Δράσεις','Σημαντικά','Πρόγραμμα']},
+ 'ΚΑ':{c:'#900000',subs:['Δράσεις','Σημαντικά','Πρόγραμμα']},
+ 'ΣΧΟΛΕΣ':{c:'#37145A',subs:['ΑΛ','ΟΠ','ΚΑ','ΣΠΕΒ','Άλλες','Επαρχίας']},
+ 'ΓΕΝΙΚΗ':{c:'#4E1F78',subs:['Δράσεις','Σημαντικά']},
+ 'ΕΘΝΙΚΕΣ':{c:'#5A5A5A',subs:['Αργίες','Εθνικές']},
+ 'ΒΑΘΜΟΦΟΡΩΝ':{c:'#5E2A08',subs:['—']}
+};
+const ORDER=Object.keys(MAINS);
+const API_URL="https://script.google.com/macros/s/AKfycbxTME66DDDOOdU5m__M-_EFjp_DivUchyvXba6DNOmoKD7pJ7lifTEIoJsNBtLANCyE/exec";var TEAM=(new URLSearchParams(location.search).get("team")||"admin");var TMAP={AL:"ΑΛ",OP:"ΟΠ",KA:"ΚΑ",ADMIN:"admin",admin:"admin"};TEAM=TMAP[TEAM]||TEAM;var EXTRA=[];
+const LSK='mola7627v2';
+let ST={tags:{},off:{},added:[],fMain:{},fSub:{},edit:false,src:'ge'};
+function loadST(){try{const s=JSON.parse(localStorage.getItem(LSK));if(s)ST=Object.assign(ST,s)}catch(e){}}
+function saveST(){localStorage.setItem(LSK,JSON.stringify(ST))}
+loadST();
+if(!Object.keys(ST.fMain).length){ORDER.forEach(m=>{ST.fMain[m]=true;MAINS[m].subs.forEach(s=>ST.fSub[m+':'+s]=true)})}
+function tagsOf(e){return ST.tags[e.id]||e.tags}
+function ownerOf(e){return e.owner||e.src||'ΓΕ'}
+function eachEntry(cb){BASE.forEach((m,mi)=>m.sats.forEach((s,si)=>s.entries.forEach(e=>cb(e,mi,si,s))));ST.added.forEach(e=>cb(e,e.mi,e.si,{date:e.date}));EXTRA.forEach(e=>cb(e,e.mi,e.si,{date:e.date}))}
+function srcOK(e){const s=e.src||'ΠΑΓΙΟ';if(ST.src==='all')return true;if(ST.src==='ge')return s==='ΓΕ';return s!=='ΓΕ'}
+function visible(e){return srcOK(e)&&tagsOf(e).some(tg=>{const[m,s]=tg.split(':');return ST.fMain[m]&&ST.fSub[m+':'+s]!==false})}
+function selected(e){return !ST.off[e.id]}
+function mainColor(e){return (MAINS[tagsOf(e)[0].split(':')[0]]||{c:'#4E1F78'}).c}
+function isBold(e){return e.b||tagsOf(e).some(t=>t.endsWith('Σημαντικά'))}
+function sizeFor(e){const s=tagsOf(e).map(t=>t.split(':')[1]);if(s.includes('Σημαντικά'))return 13;if(s.includes('Δράσεις'))return 12;if(s.includes('Πρόγραμμα'))return 11;return 12}
+
+function renderFilters(){
+ const cnt={};eachEntry(e=>tagsOf(e).forEach(t=>cnt[t]=(cnt[t]||0)+1));
+ const w=document.getElementById('filters');w.innerHTML='';
+ ORDER.forEach(m=>{
+  const tot=Object.keys(cnt).filter(k=>k.startsWith(m+':')).reduce((a,k)=>a+cnt[k],0);
+  const cat=document.createElement('div');cat.className='cat';
+  const line=document.createElement('div');line.className='catline';
+  line.innerHTML='<span class="exp">'+(ST['x'+m]?'▸':'▾')+'</span><span class="dot" style="background:'+MAINS[m].c+'"></span><span class="catname" style="color:'+MAINS[m].c+'">'+m+'</span><span class="catn">'+tot+'</span>';
+  const cb=document.createElement('input');cb.type='checkbox';cb.checked=ST.fMain[m];cb.style.marginLeft='4px';
+  cb.onchange=()=>{ST.fMain[m]=cb.checked;markCustom();save()};
+  line.appendChild(cb);
+  line.querySelector('.exp').onclick=(ev)=>{ev.stopPropagation();ST['x'+m]=!ST['x'+m];save()};
+  line.querySelector('.catname').onclick=()=>{ST['x'+m]=!ST['x'+m];save()};
+  cat.appendChild(line);
+  if(!ST['x'+m]){
+   const sw=document.createElement('div');sw.className='subs';
+   MAINS[m].subs.forEach(s=>{const key=m+':'+s;const sl=document.createElement('div');sl.className='subline';
+    const scb=document.createElement('input');scb.type='checkbox';scb.checked=ST.fSub[key]!==false;
+    scb.onchange=()=>{ST.fSub[key]=scb.checked;markCustom();save()};
+    sl.appendChild(scb);sl.appendChild(document.createTextNode(' '+s+(s==='—'?'':'')+'  '));
+    const n=document.createElement('span');n.className='catn';n.textContent=cnt[key]||0;sl.appendChild(n);
+    sw.appendChild(sl)});
+   cat.appendChild(sw);
+  }
+  w.appendChild(cat);
+ });
+}
+function renderGrid(){
+ const w=document.getElementById('grid');w.innerHTML='';
+ BASE.forEach((m,mi)=>{
+  const md=document.createElement('div');md.className='month';
+  md.innerHTML='<div class="mlabel">'+m.label+'</div>';
+  const g=document.createElement('div');g.className='grid';
+  m.sats.forEach((s,si)=>{
+   const cell=document.createElement('div');cell.className='cell';
+   const cd=document.createElement('div');cd.className='cd';cd.innerHTML='<span>'+(s.date||'')+'</span>';
+   const ab=document.createElement('button');ab.className='addb';ab.textContent='+';ab.title='Προσθήκη δράσης';ab.onclick=()=>addEntry(mi,si,s.date);cd.appendChild(ab);
+   cell.appendChild(cd);
+   const list=s.entries.concat(ST.added.filter(x=>x.mi===mi&&x.si===si)).concat(EXTRA.filter(x=>x.mi===mi&&x.si===si));
+   list.forEach(e=>{if(visible(e))cell.appendChild(entRow(e))});
+   g.appendChild(cell);
+  });
+  md.appendChild(g);w.appendChild(md);
+ });
+}
+function entRow(e){
+ const row=document.createElement('div');row.className='ent'+(selected(e)?'':' off');
+ const cb=document.createElement('input');cb.type='checkbox';cb.checked=selected(e);
+ cb.onchange=()=>{if(cb.checked)delete ST.off[e.id];else ST.off[e.id]=1;save()};
+ const lab=document.createElement('span');lab.className='lab';lab.style.color=mainColor(e);if(isBold(e))lab.style.fontWeight='600';lab.style.fontSize=sizeFor(e)+'px';
+ lab.appendChild(document.createTextNode(e.t));
+ tagsOf(e).forEach(tg=>{const[mm,ss]=tg.split(':');const ch=document.createElement('span');ch.className='chip';ch.style.color=MAINS[mm].c;ch.style.borderColor=MAINS[mm].c;ch.textContent=mm+(ss&&ss!=='—'?'·'+ss:'');lab.appendChild(ch)});
+ lab.onclick=()=>{if(ST.edit)openEdit(e);else{cb.checked=!cb.checked;cb.onchange()}};
+ const pen=document.createElement('span');pen.className='pen';pen.textContent='✎';pen.onclick=()=>openEdit(e);
+ row.appendChild(cb);row.appendChild(lab);row.appendChild(pen);
+ return row;
+}
+function openEdit(e){
+ if(TEAM!=='admin'&&ownerOf(e)!==TEAM){alert('Μπορείς να επεξεργαστείς μόνο δράσεις του τμήματός σου ('+TEAM+'). Οι δράσεις της Γενικής αλλάζουν από τον διαχειριστή.');return;}
+ const box=document.getElementById('modalBox');
+ const cur=tagsOf(e).slice();
+ function draw(){
+  box.innerHTML='<h3>Κατηγορίες δράσης</h3><div style="font-weight:500;margin-bottom:6px">'+e.t+'</div>';
+  const tr=document.createElement('div');tr.className='tagrow';
+  cur.forEach((tg,i)=>{const[mm,ss]=tg.split(':');const t=document.createElement('span');t.className='tag';t.style.background=MAINS[mm].c;t.innerHTML=mm+(ss&&ss!=='—'?' · '+ss:'')+' <b>✕</b>';t.querySelector('b').onclick=()=>{cur.splice(i,1);draw()};tr.appendChild(t)});
+  box.appendChild(tr);
+  const hint=document.createElement('div');hint.className='hint';hint.textContent='Πρόσθεσε μία ή περισσότερες κατηγορίες:';box.appendChild(hint);
+  const selM=document.createElement('select');ORDER.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;selM.appendChild(o)});
+  const selS=document.createElement('select');
+  function fillS(){selS.innerHTML='';MAINS[selM.value].subs.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;selS.appendChild(o)})}
+  selM.onchange=fillS;fillS();
+  const addb=document.createElement('button');addb.className='btn';addb.textContent='＋ Προσθήκη';addb.onclick=()=>{const tg=selM.value+':'+selS.value;if(!cur.includes(tg))cur.push(tg);draw()};
+  const line=document.createElement('div');line.className='row';line.style.margin='4px 0 12px';line.append(selM,selS,addb);box.appendChild(line);
+  const foot=document.createElement('div');foot.className='row';foot.style.justifyContent='space-between';
+  const del=document.createElement('button');del.className='btn';del.textContent='🗑 Διαγραφή δράσης';del.onclick=()=>{delEntry(e);close()};
+  const rg=document.createElement('div');rg.className='row';
+  const cancel=document.createElement('button');cancel.className='btn';cancel.textContent='Άκυρο';cancel.onclick=close;
+  const ok=document.createElement('button');ok.className='btn pri';ok.textContent='Αποθήκευση';ok.onclick=()=>{if(cur.length){ST.tags[e.id]=cur;e.tags=cur}close()};
+  rg.append(cancel,ok);foot.append(e.user?del:document.createElement('span'),rg);box.appendChild(foot);
+ }
+ draw();document.getElementById('modal').classList.add('on');
+}
+function close(){document.getElementById('modal').classList.remove('on');save()}
+document.getElementById('modal').onclick=(e)=>{if(e.target.id==='modal')close()};
+function addEntry(mi,si,date){
+ const t=prompt('Τίτλος δράσης:');if(!t)return;
+ const id='u'+Date.now();
+ const dft=(TEAM!=='admin'?TEAM+':Δράσεις':'ΑΛ:Δράσεις');const e={id:id,t:t,tags:[dft],b:false,mi:mi,si:si,date:date,user:true,owner:(TEAM!=='admin'?TEAM:'ΠΑΓΙΟ'),src:'ΤΜΗΜΑ'};
+ ST.added.push(e);save();openEdit(e);
+}
+function delEntry(e){ST.added=ST.added.filter(x=>x.id!==e.id);delete ST.tags[e.id];delete ST.off[e.id];save()}
+function selAll(v){eachEntry(e=>{if(v)delete ST.off[e.id];else ST.off[e.id]=1});save()}
+function setPreset(p){
+ if(p==='custom'){}
+ else if(p==='all'){ORDER.forEach(m=>{ST.fMain[m]=true;MAINS[m].subs.forEach(s=>ST.fSub[m+':'+s]=true)})}
+ else{ORDER.forEach(m=>{ST.fMain[m]=false;MAINS[m].subs.forEach(s=>ST.fSub[m+':'+s]=true)});
+  ['ΣΥΣΤΗΜΑ','ΣΧΟΛΕΣ','ΕΘΝΙΚΕΣ','ΓΕΝΙΚΗ',p].forEach(m=>ST.fMain[m]=true);
+  MAINS['ΣΧΟΛΕΣ'].subs.forEach(s=>ST.fSub['ΣΧΟΛΕΣ:'+s]=(s===p));
+  ST.fSub['ΓΕΝΙΚΗ:Δράσεις']=false;ST.fSub['ΓΕΝΙΚΗ:Σημαντικά']=true;}
+ ST.preset=p;document.querySelectorAll('header .btn[data-p]').forEach(b=>b.classList.toggle('act',b.dataset.p===p));
+ save();
+}
+function markCustom(){ST.preset='custom';document.querySelectorAll('header .btn[data-p]').forEach(b=>b.classList.toggle('act',b.dataset.p==='custom'))}
+function updCount(){let sel=0,vis=0;eachEntry(e=>{if(visible(e)){vis++;if(selected(e))sel++}});document.getElementById('count').textContent=sel+' επιλεγμένες / '+vis+' ορατές';}
+function save(){saveST();renderFilters();renderGrid();updCount()}
+document.querySelectorAll('header .btn[data-p]').forEach(b=>b.onclick=()=>setPreset(b.dataset.p));
+document.querySelectorAll('header .btn.src').forEach(b=>b.onclick=()=>{ST.src=b.dataset.s;document.querySelectorAll('header .btn.src').forEach(x=>x.classList.toggle('act',x===b));save()});
+document.getElementById('editBtn').onclick=function(){ST.edit=!ST.edit;document.body.classList.toggle('edit',ST.edit);this.classList.toggle('act',ST.edit)};
+function molaXlsx(){
+ if(typeof XLSX==='undefined'){alert('Χρειάζεται σύνδεση internet για την εξαγωγή Excel.');return}
+ const vals=[],sty=[],merges=[];let r=0;
+ const push=(vrow,srow)=>{vals.push(vrow);sty.push(srow)};
+ BASE.forEach((m,mi)=>{
+  const sats=m.sats.map((s,si)=>({date:s.date,ents:s.entries.concat(ST.added.filter(x=>x.mi===mi&&x.si===si)).filter(e=>selected(e)&&visible(e))}));
+  const maxN=Math.max(0,...sats.map(s=>s.ents.length));
+  const vr=[m.label],sr=[{font:{bold:true,sz:11},alignment:{vertical:'top',wrapText:true}}];
+  sats.forEach(s=>{vr.push(s.date||'');sr.push({font:{bold:true,sz:11,color:{rgb:'111111'}},alignment:{vertical:'top'}})});
+  push(vr,sr);
+  for(let k=0;k<maxN;k++){
+   const vv=[''],ss=[{}];
+   sats.forEach(s=>{const e=s.ents[k];if(e){const b=isBold(e);vv.push(e.t);ss.push({font:{sz:b?11:10,bold:b,color:{rgb:mainColor(e).replace('#','')}},alignment:{vertical:'top',wrapText:true}})}else{vv.push('');ss.push({})}});
+   push(vv,ss);
+  }
+  const block=1+maxN;if(block>1)merges.push({s:{r:r,c:0},e:{r:r+block-1,c:0}});r+=block;
+ });
+ const ws=XLSX.utils.aoa_to_sheet(vals);
+ for(let ri=0;ri<sty.length;ri++)for(let ci=0;ci<sty[ri].length;ci++){const a=XLSX.utils.encode_cell({r:ri,c:ci});if(ws[a])ws[a].s=sty[ri][ci]}
+ ws['!merges']=merges;ws['!cols']=[{wch:12},{wch:22},{wch:22},{wch:22},{wch:22},{wch:22}];
+ ws['!pageSetup']={orientation:'landscape',fitToWidth:1};
+ const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Μόλα');
+ XLSX.writeFile(wb,'Μόλα 76 2026-2027 (επιλογή).xlsx');
+}
+function expJSON(){const blob=new Blob([JSON.stringify(ST)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mola_epilogi.json';a.click()}
+function impJSON(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{ST=Object.assign({tags:{},off:{},added:[],fMain:{},fSub:{}},JSON.parse(r.result));save()}catch(e){alert('Μη έγκυρο αρχείο')}};r.readAsText(f)}
+function resetAll(){if(confirm('Επαναφορά όλων των επιλογών/κατηγοριών;')){localStorage.removeItem(LSK);location.reload()}}
+if(ST.edit){document.body.classList.add('edit');document.getElementById('editBtn').classList.add('act')}
+if(ST.preset){document.querySelectorAll('header .btn[data-p]').forEach(b=>b.classList.toggle('act',b.dataset.p===ST.preset))}
+if(TEAM!=='admin'&&!ST.preset){ST.src='all';setPreset(TEAM)}
+if(API_URL&&API_URL.indexOf("__")<0)forceRead();
+try{document.getElementById('teamTag').textContent=' — '+(TEAM==='admin'?'Διαχειριστής':'Τμήμα '+TEAM)}catch(e){}
+save();
+function setStatus(t){var el=document.getElementById('saveStatus');if(el)el.textContent=t}
+function forceRead(){
+ if(!API_URL||API_URL.indexOf('__')>=0){setStatus('⚠ Όρισε το API_URL στο αρχείο');return;}
+ setStatus('Ανάγνωση…');
+ window.__molaCb=function(resp){try{
+   var all=(resp&&resp.states)||{};
+   var mine=all[TEAM];if(mine){try{var s=JSON.parse(mine);['tags','off','added','fMain','fSub','src','preset'].forEach(function(k){if(s[k]!==undefined)ST[k]=s[k]})}catch(e){}}
+   EXTRA=[];if(TEAM==='admin'){Object.keys(all).forEach(function(tm){if(tm==='admin')return;try{var st=JSON.parse(all[tm]);(st.added||[]).forEach(function(x){x.owner=tm;x.fromTeam=true;EXTRA.push(x)})}catch(e){}})}
+   setStatus('Ενημερώθηκε ✓ '+new Date().toLocaleTimeString());save();
+ }catch(e){setStatus('Σφάλμα ανάγνωσης')}};
+ var s=document.createElement('script');s.src=API_URL+(API_URL.indexOf('?')>=0?'&':'?')+'callback=__molaCb&_='+Date.now();s.onerror=function(){setStatus('Σφάλμα σύνδεσης με τη βάση')};document.body.appendChild(s);setTimeout(function(){try{s.remove()}catch(e){}},9000);
+}
+function forceWrite(){
+ if(!API_URL||API_URL.indexOf('__')>=0){setStatus('⚠ Όρισε το API_URL στο αρχείο');return;}
+ setStatus('Αποθήκευση…');
+ var payload=JSON.stringify({team:TEAM,state:{tags:ST.tags,off:ST.off,added:ST.added,fMain:ST.fMain,fSub:ST.fSub,src:ST.src,preset:ST.preset}});
+ fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:payload}).then(function(){setStatus('Στάλθηκε ✓ — κάνε Force read για επιβεβαίωση')}).catch(function(){setStatus('Σφάλμα αποθήκευσης')});
+}
+</script>
+</body>
+</html>
