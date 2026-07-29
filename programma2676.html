@@ -212,7 +212,7 @@ function openEdit(e){
   cur.forEach((tg,i)=>{const[mm,ss]=tg.split(':');const t=document.createElement('span');t.className='tag';t.style.background=MAINS[mm].c;t.innerHTML=mm+(ss&&ss!=='—'?' · '+ss:'')+' <b>✕</b>';t.querySelector('b').onclick=()=>{cur.splice(i,1);draw()};tr.appendChild(t)});
   box.appendChild(tr);
   const hint=document.createElement('div');hint.className='hint';hint.textContent='Πρόσθεσε μία ή περισσότερες κατηγορίες:';box.appendChild(hint);
-  const selM=document.createElement('select');ORDER.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;selM.appendChild(o)});
+  const selM=document.createElement('select');var MOPTS=(TEAM==='admin'?ORDER:['ΑΛ','ΟΠ','ΚΑ']);MOPTS.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;selM.appendChild(o)});
   const selS=document.createElement('select');
   function fillS(){selS.innerHTML='';MAINS[selM.value].subs.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;selS.appendChild(o)})}
   selM.onchange=fillS;selM.value=(TEAM==='admin'?'ΣΥΣΤΗΜΑ':TEAM);fillS();
