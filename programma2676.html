@@ -129,7 +129,7 @@ const ORDER=Object.keys(MAINS);
 const API_URL="https://script.google.com/macros/s/AKfycbxTME66DDDOOdU5m__M-_EFjp_DivUchyvXba6DNOmoKD7pJ7lifTEIoJsNBtLANCyE/exec";var TEAM=(new URLSearchParams(location.search).get("team")||"admin");var TMAP={AL:"ΑΛ",OP:"ΟΠ",KA:"ΚΑ",ADMIN:"admin",admin:"admin"};TEAM=TMAP[TEAM]||TEAM;var EXTRA=[];
 const LSK='mola7627v2';
 let ST={tags:{},off:{},added:[],fMain:{},fSub:{},edit:false,src:'ge'};
-function loadST(){try{const s=JSON.parse(localStorage.getItem(LSK));if(s)ST=Object.assign(ST,s)}catch(e){}}
+function loadST(){}
 function saveST(){localStorage.setItem(LSK,JSON.stringify(ST))}
 loadST();
 if(!Object.keys(ST.fMain).length){ORDER.forEach(m=>{ST.fMain[m]=true;MAINS[m].subs.forEach(s=>ST.fSub[m+':'+s]=true)})}
@@ -139,7 +139,7 @@ function eachEntry(cb){BASE.forEach((m,mi)=>m.sats.forEach((s,si)=>s.entries.for
 function srcOK(e){const s=e.src||'ΠΑΓΙΟ';if(ST.src==='all')return true;if(ST.src==='ge')return s==='ΓΕ';return s!=='ΓΕ'}
 function visible(e){return srcOK(e)&&tagsOf(e).some(tg=>{const[m,s]=tg.split(':');return ST.fMain[m]&&ST.fSub[m+':'+s]!==false})}
 function selected(e){return !ST.off[e.id]}
-function mainColor(e){return (MAINS[tagsOf(e)[0].split(':')[0]]||{c:'#4E1F78'}).c}
+function mainColor(e){var tg=tagsOf(e);return tg.length?(MAINS[tg[0].split(':')[0]]||{c:'#4E1F78'}).c:'#888'}
 function isBold(e){return e.b||tagsOf(e).some(t=>t.endsWith('Σημαντικά'))}
 function sizeFor(e){const s=tagsOf(e).map(t=>t.split(':')[1]);if(s.includes('Σημαντικά'))return 13;if(s.includes('Δράσεις'))return 12;if(s.includes('Πρόγραμμα'))return 11;return 12}
 
@@ -225,12 +225,12 @@ function openEdit(e){
  }
  draw();document.getElementById('modal').classList.add('on');
 }
-function close(){document.getElementById('modal').classList.remove('on');save()}
+function close(){ST.added=ST.added.filter(function(x){var tg=ST.tags[x.id]||x.tags||[];return tg.length>0||!x.user});document.getElementById('modal').classList.remove('on');save()}
 document.getElementById('modal').onclick=(e)=>{if(e.target.id==='modal')close()};
 function addEntry(mi,si,date){
  const t=prompt('Τίτλος δράσης:');if(!t)return;
  const id='u'+Date.now();
- const dft=(TEAM==='admin'?'ΣΥΣΤΗΜΑ:Εκδηλώσεις':TEAM+':Δράσεις');const e={id:id,t:t,tags:[dft],b:false,mi:mi,si:si,date:date,user:true,owner:(TEAM!=='admin'?TEAM:'ΠΑΓΙΟ'),src:'ΤΜΗΜΑ'};
+ const dft=(TEAM==='admin'?'ΣΥΣΤΗΜΑ:Εκδηλώσεις':TEAM+':Δράσεις');const e={id:id,t:t,tags:[],b:false,mi:mi,si:si,date:date,user:true,owner:(TEAM!=='admin'?TEAM:'ΠΑΓΙΟ'),src:'ΤΜΗΜΑ'};
  ST.added.push(e);save();openEdit(e);
 }
 function delEntry(e){ST.added=ST.added.filter(x=>x.id!==e.id);delete ST.tags[e.id];delete ST.off[e.id];save()}
