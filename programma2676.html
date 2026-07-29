@@ -146,7 +146,7 @@ function sizeFor(e){const s=tagsOf(e).map(t=>t.split(':')[1]);if(s.includes('Σ�
 
 function renderFilters(){
  const cnt={};eachEntry(e=>tagsOf(e).forEach(t=>cnt[t]=(cnt[t]||0)+1));
- const w=document.getElementById('filters');w.innerHTML='';
+ const w=document.getElementById('filters');w.innerHTML='';var _cb=document.createElement('div');_cb.style.cssText='display:flex;align-items:center;gap:6px;margin:0 0 8px';var _cl=document.createElement('span');_cl.className='gl';_cl.style.fontSize='11px';_cl.textContent='Κατηγορίες:';var _ca=document.createElement('button');_ca.className='btn';_ca.style.fontSize='11px';_ca.style.padding='3px 8px';_ca.textContent='Όλες';_ca.onclick=function(){catAll(true)};var _cn=document.createElement('button');_cn.className='btn';_cn.style.fontSize='11px';_cn.style.padding='3px 8px';_cn.textContent='Καμία';_cn.onclick=function(){catAll(false)};_cb.append(_cl,_ca,_cn);w.appendChild(_cb);
  ORDER.forEach(m=>{
   const tot=Object.keys(cnt).filter(k=>k.startsWith(m+':')).reduce((a,k)=>a+cnt[k],0);
   const cat=document.createElement('div');cat.className='cat';
@@ -247,7 +247,7 @@ function setPreset(p){
  ST.preset=p;document.querySelectorAll('header .btn[data-p]').forEach(b=>b.classList.toggle('act',b.dataset.p===p));
  save();
 }
-function markCustom(){ST.preset='custom';document.querySelectorAll('header .btn[data-p]').forEach(b=>b.classList.toggle('act',b.dataset.p==='custom'))}
+function markCustom(){ST.preset='custom';document.querySelectorAll('header .btn[data-p]').forEach(b=>b.classList.toggle('act',b.dataset.p==='custom'))}function catAll(v){ORDER.forEach(m=>{ST.fMain[m]=v;MAINS[m].subs.forEach(s=>ST.fSub[m+':'+s]=v)});markCustom();save()}
 function updCount(){let sel=0,vis=0;eachEntry(e=>{if(visible(e)){vis++;if(selected(e))sel++}});document.getElementById('count').textContent=sel+' επιλεγμένες / '+vis+' ορατές';}
 function save(){saveST();renderFilters();renderGrid();updCount()}
 document.querySelectorAll('header .btn[data-p]').forEach(b=>b.onclick=()=>setPreset(b.dataset.p));
