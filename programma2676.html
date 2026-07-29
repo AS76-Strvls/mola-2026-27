@@ -267,6 +267,7 @@ function resetAll(){if(confirm('Επαναφορά όλων των επιλογ�
 if(ST.edit){document.body.classList.add('edit');document.getElementById('editBtn').classList.add('act')}
 if(ST.preset){document.querySelectorAll('header .btn[data-p]').forEach(b=>b.classList.toggle('act',b.dataset.p===ST.preset))}
 if(TEAM!=='admin'&&!ST.preset){ST.src='all';setPreset(TEAM)}
+if(TEAM!=='admin'){['ΣΥΣΤΗΜΑ','ΑΡΓΙΕΣ'].forEach(m=>{ST.fMain[m]=true;MAINS[m].subs.forEach(s=>ST.fSub[m+':'+s]=true)})}
 if(API_URL&&API_URL.indexOf("__")<0)forceRead();
 try{document.getElementById('teamTag').textContent=' — '+(TEAM==='admin'?'Διαχειριστής':'Τμήμα '+TEAM)}catch(e){}
 save();
