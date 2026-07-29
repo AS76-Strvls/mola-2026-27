@@ -88,13 +88,13 @@ select,input[type=text]{padding:5px 7px;border:1px solid var(--bd);border-radius
   <span id="saveStatus" style="color:var(--mut);font-size:12px"></span>
   <span class="sep"></span>
   <button class="btn" id="editBtn">✎ Επεξεργασία κατηγοριών</button>
-  <span class="sep"></span>
-  <span class="gl">Επιλογή:</span>
-  <button class="btn" onclick="selAll(1)">Όλων</button>
-  <button class="btn" onclick="selAll(0)">Καμία</button>
  </div>
  <div class="row" style="margin-top:6px">
-  <span class="gl">Εξαγωγή:</span>
+  <span class="gl">Εκτύπωση / Export:</span>
+  <span class="gl" style="font-weight:400">επιλογή τι μπαίνει →</span>
+  <button class="btn" onclick="selAll(1)">Όλα</button>
+  <button class="btn" onclick="selAll(0)">Κανένα</button>
+  <span class="sep"></span>
   <button class="btn" onclick="window.print()">🖨 Εκτύπωση επιλογής</button>
   <button class="btn pri" onclick="molaXlsx()">⬇ Excel (.xlsx)</button>
  </div>
