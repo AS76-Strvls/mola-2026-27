@@ -126,7 +126,7 @@ const MAINS={
  'ΒΑΘΜΟΦΟΡΩΝ':{c:'#5E2A08',subs:['—']}
 }
 const ORDER=Object.keys(MAINS);
-const API_URL="https://script.google.com/macros/s/AKfycbxTME66DDDOOdU5m__M-_EFjp_DivUchyvXba6DNOmoKD7pJ7lifTEIoJsNBtLANCyE/exec";var TEAM=(new URLSearchParams(location.search).get("team")||"admin");var TMAP={AL:"ΑΛ",OP:"ΟΠ",KA:"ΚΑ",ADMIN:"admin",admin:"admin"};TEAM=TMAP[TEAM]||TEAM;var EXTRA=[];
+const API_URL="https://script.google.com/macros/s/AKfycbxTME66DDDOOdU5m__M-_EFjp_DivUchyvXba6DNOmoKD7pJ7lifTEIoJsNBtLANCyE/exec";var TEAM=(new URLSearchParams(location.search).get("team")||"admin");var TMAP={AL:"ΑΛ",OP:"ΟΠ",KA:"ΚΑ",ADMIN:"admin",admin:"admin"};TEAM=TMAP[TEAM]||TEAM;var EXTRA=[];const MN=[9,10,11,12,1,2,3,4,5,6,7,8];var GIMAP={},_gi=0;BASE.forEach((m,mi)=>m.sats.forEach((s,si)=>{if(s.date)GIMAP[mi+'_'+si]=_gi++;}));function findCell(e){if(e.mi!==undefined&&e.date)return{mi:e.mi,si:e.si,day:parseInt(e.date,10),mo:MN[e.mi]};for(var mi=0;mi<BASE.length;mi++){var st=BASE[mi].sats;for(var si=0;si<st.length;si++){if(st[si].entries.indexOf(e)>=0)return{mi:mi,si:si,day:parseInt(st[si].date,10),mo:MN[mi]};}}return null;}function weekDays(c){if(!c||!c.day)return[];var y=c.mo>=9?2026:2027,base=new Date(y,c.mo-1,c.day),g=['Κυρ','Δευ','Τρι','Τετ','Πεμ','Παρ','Σαβ'],out=[];for(var o=-1;o<=5;o++){var dt=new Date(base);dt.setDate(dt.getDate()+o);out.push({v:dt.getDate()+'/'+(dt.getMonth()+1),label:g[dt.getDay()]+' '+dt.getDate()+'/'+(dt.getMonth()+1)});}return out;}
 const LSK='mola7627v2';
 let ST={tags:{},off:{},added:[],fMain:{},fSub:{},edit:false,src:'ge'};
 function loadST(){}
@@ -182,7 +182,7 @@ function renderGrid(){
    const cd=document.createElement('div');cd.className='cd';cd.innerHTML='<span>'+(s.date||'')+'</span>';
    const ab=document.createElement('button');ab.className='addb';ab.textContent='+';ab.title='Προσθήκη δράσης';ab.onclick=()=>addEntry(mi,si,s.date);cd.appendChild(ab);
    cell.appendChild(cd);
-   const list=s.entries.concat(ST.added.filter(x=>x.mi===mi&&x.si===si)).concat(EXTRA.filter(x=>x.mi===mi&&x.si===si));
+   const G=GIMAP[mi+"_"+si];const inSpan=x=>{var sg=GIMAP[x.mi+"_"+x.si];return sg!==undefined&&G!==undefined&&G>=sg&&G<=sg+(x.span||0);};const list=s.entries.concat(ST.added.filter(inSpan)).concat(EXTRA.filter(inSpan));
    list.forEach(e=>{if(visible(e))cell.appendChild(entRow(e))});
    g.appendChild(cell);
   });
@@ -205,7 +205,7 @@ function openEdit(e){
  if(TEAM!=='admin'&&ownerOf(e)!==TEAM){alert('Μπορείς να επεξεργαστείς μόνο δράσεις του τμήματός σου ('+TEAM+'). Οι δράσεις της Γενικής αλλάζουν από τον διαχειριστή.');return;}
  const box=document.getElementById('modalBox');
  const cur=tagsOf(e).slice();
- var dateVal=e.draw||'';
+ var dateVal=e.draw||'';var spanVal=e.span||0;
  function draw(){
   box.innerHTML='<h3>Κατηγορίες δράσης</h3><div style="font-weight:500;margin-bottom:6px">'+e.t+'</div>';
   const tr=document.createElement('div');tr.className='tagrow';
@@ -218,12 +218,12 @@ function openEdit(e){
   selM.onchange=fillS;selM.value=(TEAM==='admin'?'ΣΥΣΤΗΜΑ':TEAM);fillS();
   const addb=document.createElement('button');addb.className='btn';addb.textContent='＋ Προσθήκη';addb.onclick=()=>{const tg=selM.value+':'+selS.value;if(!cur.includes(tg))cur.push(tg);draw()};
   const line=document.createElement('div');line.className='row';line.style.margin='4px 0 12px';line.append(selM,selS,addb);box.appendChild(line);
-  var dr2=document.createElement('div');dr2.className='row';dr2.style.margin='0 0 12px';var dlab=document.createElement('span');dlab.className='gl';dlab.textContent='Ημ/νία:';var din=document.createElement('input');din.type='text';din.placeholder='π.χ. 6/9 (προαιρετικό)';din.value=dateVal;din.style.width='160px';din.oninput=function(){dateVal=this.value};dr2.append(dlab,din);box.appendChild(dr2);
+  var cell=findCell(e);var wd=weekDays(cell);var dr2=document.createElement('div');dr2.className='row';dr2.style.margin='0 0 12px';dr2.style.flexWrap='wrap';var dlab=document.createElement('span');dlab.className='gl';dlab.textContent='Ημ/νία:';var dsel=document.createElement('select');var o0=document.createElement('option');o0.value='';o0.textContent='(σύνολο ΣΚ)';dsel.appendChild(o0);wd.forEach(function(w){var o=document.createElement('option');o.value=w.v;o.textContent=w.label;dsel.appendChild(o);});dsel.value=dateVal||'';dsel.onchange=function(){dateVal=this.value;};dr2.append(dlab,dsel);var slab=document.createElement('span');slab.className='gl';slab.style.marginLeft='12px';slab.textContent='Διάρκεια:';var ssel=document.createElement('select');[['1','1 Σάββατο'],['2','2 (Σάβ–Σάβ)'],['3','3 Σάββατα'],['4','4 Σάββατα']].forEach(function(p){var o=document.createElement('option');o.value=p[0];o.textContent=p[1];ssel.appendChild(o);});ssel.value=String(spanVal+1);ssel.onchange=function(){spanVal=parseInt(this.value,10)-1;};dr2.append(slab,ssel);box.appendChild(dr2);
   const foot=document.createElement('div');foot.className='row';foot.style.justifyContent='space-between';
   const del=document.createElement('button');del.className='btn';del.textContent='🗑 Διαγραφή δράσης';del.onclick=()=>{delEntry(e);close()};
   const rg=document.createElement('div');rg.className='row';
   const cancel=document.createElement('button');cancel.className='btn';cancel.textContent='Άκυρο';cancel.onclick=close;
-  const ok=document.createElement('button');ok.className='btn pri';ok.textContent='Αποθήκευση';ok.onclick=()=>{if(cur.length){ST.tags[e.id]=cur;e.tags=cur;e.draw=(dateVal||'').trim();e.dnote=e.draw?molaDay(e.draw):''}close()};
+  const ok=document.createElement('button');ok.className='btn pri';ok.textContent='Αποθήκευση';ok.onclick=()=>{if(!cur.length){cur.push(selM.value+':'+selS.value);}ST.tags[e.id]=cur;e.tags=cur;e.draw=(dateVal||'').trim();e.dnote=e.draw?molaDay(e.draw):'';e.span=spanVal;close()};
   rg.append(cancel,ok);foot.append(e.user?del:document.createElement('span'),rg);box.appendChild(foot);
  }
  draw();document.getElementById('modal').classList.add('on');
@@ -233,7 +233,7 @@ document.getElementById('modal').onclick=(e)=>{if(e.target.id==='modal')close()}
 function addEntry(mi,si,date){
  const t=prompt('Τίτλος δράσης:');if(!t)return;
  const id='u'+Date.now();
- const dft=(TEAM==='admin'?'ΣΥΣΤΗΜΑ:Εκδηλώσεις':TEAM+':Δράσεις');const e={id:id,t:t,tags:[],b:false,mi:mi,si:si,date:date,user:true,owner:(TEAM!=='admin'?TEAM:'ΠΑΓΙΟ'),src:'ΤΜΗΜΑ'};
+ const e={id:id,t:t,tags:[],b:false,mi:mi,si:si,date:date,user:true,owner:(TEAM!=='admin'?TEAM:'ΠΑΓΙΟ'),src:'ΤΜΗΜΑ',span:0};if(date){e.draw=parseInt(date,10)+'/'+MN[mi];e.dnote=molaDay(e.draw);}
  ST.added.push(e);save();openEdit(e);
 }
 function delEntry(e){ST.added=ST.added.filter(x=>x.id!==e.id);delete ST.tags[e.id];delete ST.off[e.id];save()}
