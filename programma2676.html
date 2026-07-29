@@ -11,6 +11,8 @@ body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:
 header{padding:14px 18px;background:#f4f8f1;border-bottom:2px solid #3D5F26;position:sticky;top:0;z-index:20}
 h1{font-size:17px;margin:0 0 8px;font-weight:600;color:#2b3a1c}
 .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl{font-size:12px;color:var(--mut);font-weight:500;margin-right:2px}
+.sep{width:1px;height:16px;background:var(--bd);margin:0 4px;display:inline-block}
 .btn{padding:5px 11px;border:1px solid var(--bd);border-radius:7px;background:#fff;cursor:pointer;font-size:12px}
 .btn:hover{background:#f0efe9}
 .btn.act{background:#1c1c1a;color:#fff;border-color:#1c1c1a}
@@ -65,30 +67,41 @@ select,input[type=text]{padding:5px 7px;border:1px solid var(--bd);border-radius
 <body>
 <header>
  <h1>Πρόγραμμα Χρονιάς (Μόλα) · 76ο Σ.Π. Στροβόλου · 2026-2027 <span id='teamTag' style='font-size:12px;color:#3D5F26'></span></h1>
- <div class="row">
-  <span style="color:var(--mut);font-size:12px">Άποψη:</span>
+ <div class="row" style="margin-top:2px">
+  <span class="gl">Άποψη:</span>
   <button class="btn act" data-p="all">ΣΥΣΤΗΜΑ (όλα)</button>
   <button class="btn" data-p="ΑΛ">ΑΛ</button>
   <button class="btn" data-p="ΟΠ">ΟΠ</button>
   <button class="btn" data-p="ΚΑ">ΚΑ</button>
   <button class="btn" data-p="custom">Προσαρμογή</button>
-  <button class="btn" id="editBtn">✎ Επεξεργασία κατηγοριών</button>
-  <span style="color:var(--mut);font-size:12px;margin-left:8px">Πηγή:</span>
+  <span class="sep"></span>
+  <span class="gl">Πηγή:</span>
   <button class="btn src act" data-s="ge">Γενική Εφορία</button>
   <button class="btn src" data-s="anchor">Πάγια/76</button>
   <button class="btn src" data-s="all">Όλα</button>
   <span class="count" id="count"></span>
  </div>
- <div class="row actions" style="margin-top:8px">
-  <button class="btn" onclick="forceRead()">⟳ Force read (από βάση)</button>
-  <button class="btn pri" onclick="forceWrite()">💾 Force write (στη βάση)</button>
+ <div class="row" style="margin-top:8px">
+  <span class="gl">Βάση:</span>
+  <button class="btn" onclick="forceRead()">⟳ Force read</button>
+  <button class="btn pri" onclick="forceWrite()">💾 Force write</button>
   <span id="saveStatus" style="color:var(--mut);font-size:12px"></span>
-  <button class="btn" onclick="window.print()">🖨 Εκτύπωση επιλογής</button>
-  <button class="btn" onclick="selAll(1)">Επιλογή όλων</button>
+  <span class="sep"></span>
+  <button class="btn" id="editBtn">✎ Επεξεργασία κατηγοριών</button>
+  <span class="sep"></span>
+  <span class="gl">Επιλογή:</span>
+  <button class="btn" onclick="selAll(1)">Όλων</button>
   <button class="btn" onclick="selAll(0)">Καμία</button>
-  <button class="btn pri" onclick="molaXlsx()">⬇ Εξαγωγή Excel (.xlsx)</button>
-  <button class="btn" onclick="expJSON()">⬇ Αποθήκευση (.json)</button>
-  <button class="btn" onclick="document.getElementById('imp').click()">⬆ Εισαγωγή</button>
+ </div>
+ <div class="row" style="margin-top:6px">
+  <span class="gl">Εξαγωγή:</span>
+  <button class="btn" onclick="window.print()">🖨 Εκτύπωση επιλογής</button>
+  <button class="btn pri" onclick="molaXlsx()">⬇ Excel (.xlsx)</button>
+ </div>
+ <div class="row" id="adminTools" style="margin-top:6px">
+  <span class="gl">Εφεδρεία (admin):</span>
+  <button class="btn" onclick="expJSON()">⬇ Αποθήκευση .json</button>
+  <button class="btn" onclick="document.getElementById('imp').click()">⬆ Εισαγωγή .json</button>
   <input id="imp" type="file" accept=".json" style="display:none" onchange="impJSON(this)">
   <button class="btn" onclick="resetAll()">↺ Επαναφορά</button>
  </div>
@@ -270,6 +283,7 @@ if(TEAM!=='admin'&&!ST.preset){ST.src='all';setPreset(TEAM)}
 if(TEAM!=='admin'){['ΣΥΣΤΗΜΑ','ΑΡΓΙΕΣ'].forEach(m=>{ST.fMain[m]=true;MAINS[m].subs.forEach(s=>ST.fSub[m+':'+s]=true)})}
 if(API_URL&&API_URL.indexOf("__")<0)forceRead();
 try{document.getElementById('teamTag').textContent=' — '+(TEAM==='admin'?'Διαχειριστής':'Τμήμα '+TEAM)}catch(e){}
+if(TEAM!=='admin'){var _at=document.getElementById('adminTools');if(_at)_at.style.display='none'}
 save();
 function setStatus(t){var el=document.getElementById('saveStatus');if(el)el.textContent=t}
 function forceRead(){
