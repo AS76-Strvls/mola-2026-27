@@ -256,25 +256,61 @@ document.querySelectorAll('header .btn.src').forEach(b=>b.onclick=()=>{ST.src=b.
 document.getElementById('editBtn').onclick=function(){ST.edit=!ST.edit;document.body.classList.toggle('edit',ST.edit);this.classList.toggle('act',ST.edit)};
 function molaXlsx(){
  if(typeof XLSX==='undefined'){alert('Χρειάζεται σύνδεση internet για την εξαγωγή Excel.');return}
+ const BORD={top:{style:'thin',color:{rgb:'999999'}},bottom:{style:'thin',color:{rgb:'999999'}},left:{style:'thin',color:{rgb:'999999'}},right:{style:'thin',color:{rgb:'999999'}}};
+ const FILL=c=>({patternType:'solid',fgColor:{rgb:c}});
  const vals=[],sty=[],merges=[];let r=0;
- const push=(vrow,srow)=>{vals.push(vrow);sty.push(srow)};
+ const push=(vr,sr)=>{vals.push(vr);sty.push(sr)};
+ const pad=(vr,sr)=>{while(vr.length<6){vr.push('');sr.push({border:BORD,fill:FILL('BFBFBF')})}};
+ // Title
+ push(['ΠΡΟΓΡΑΜΜΑ ΧΡΟΝΙΑΣ — 76ο Σ.Π. ΣΤΡΟΒΟΛΟΥ 2026–2027','','','','',''],
+      [{font:{bold:true,sz:14},alignment:{horizontal:'center',vertical:'center'}},{},{},{},{},{}]);
+ merges.push({s:{r:0,c:0},e:{r:0,c:5}});r=1;
+ // Legend note
+ push(['Υπόμνημα — χρώμα γραμμάτων = κατηγορία   ·   Λευκό φόντο = δράσεις 76ου   ·   Γκρι φόντο = Γενική / Επαρχία / Σχολές','','','','',''],
+      [{font:{bold:true,sz:9,italic:true},alignment:{horizontal:'left',vertical:'center'}},{},{},{},{},{}]);
+ merges.push({s:{r:1,c:0},e:{r:1,c:5}});r=2;
+ // Legend colored labels
+ const LEG=[['ΣΥΣΤΗΜΑ','Σύστημα'],['ΑΛ','Αγέλη (ΑΛ)'],['ΟΠ','Ομάδα (ΟΠ)'],['ΚΑ','Κοινότητα (ΚΑ)'],['ΣΧΟΛΕΣ','Σχολές'],['ΓΕΝΙΚΗ','Γενική Εφορία'],['ΕΠΑΡΧΙΑ','Επαρχία'],['ΑΡΓΙΕΣ','Αργίες/Εθνικές'],['ΒΑΘΜΟΦΟΡΩΝ','Βαθμοφόρων']];
+ for(let a=0;a<LEG.length;a+=6){
+  const vr=[],sr=[];
+  for(let c=0;c<6;c++){const it=LEG[a+c];if(it){vr.push(it[1]);sr.push({font:{bold:true,sz:10,color:{rgb:(MAINS[it[0]].c||'#333').replace('#','')}},alignment:{horizontal:'center',vertical:'center'},border:BORD,fill:FILL('FFFFFF')})}else{vr.push('');sr.push({border:BORD,fill:FILL('FFFFFF')})}}
+  push(vr,sr);r++;
+ }
+ // spacer
+ push(['','','','','',''],[{},{},{},{},{},{}]);r++;
+ // Month grid
  BASE.forEach((m,mi)=>{
-  const sats=m.sats.map((s,si)=>({date:s.date,ents:s.entries.concat(ST.added.filter(x=>x.mi===mi&&x.si===si)).filter(e=>selected(e)&&visible(e))}));
-  const maxN=Math.max(0,...sats.map(s=>s.ents.length));
-  const vr=[m.label],sr=[{font:{bold:true,sz:11},alignment:{vertical:'top',wrapText:true}}];
-  sats.forEach(s=>{vr.push(s.date||'');sr.push({font:{bold:true,sz:11,color:{rgb:'111111'}},alignment:{vertical:'top'}})});
-  push(vr,sr);
-  for(let k=0;k<maxN;k++){
-   const vv=[''],ss=[{}];
-   sats.forEach(s=>{const e=s.ents[k];if(e){const b=isBold(e);vv.push(e.t);ss.push({font:{sz:b?11:10,bold:b,color:{rgb:mainColor(e).replace('#','')}},alignment:{vertical:'top',wrapText:true}})}else{vv.push('');ss.push({})}});
-   push(vv,ss);
-  }
-  const block=1+maxN;if(block>1)merges.push({s:{r:r,c:0},e:{r:r+block-1,c:0}});r+=block;
+  const sats=m.sats.map((sc,si)=>{
+   const es=sc.entries.concat(ST.added.filter(x=>x.mi===mi&&x.si===si)).concat(EXTRA.filter(x=>x.mi===mi&&x.si===si)).filter(e=>selected(e)&&visible(e));
+   return {date:sc.date,own:es.filter(e=>e.src!=='ΓΕ'),ge:es.filter(e=>e.src==='ΓΕ')};
+  });
+  const maxOwn=Math.max(0,...sats.map(s=>s.own.length));
+  const maxGe=Math.max(0,...sats.map(s=>s.ge.length));
+  const blockRows=1+maxOwn+maxGe;const startR=r;
+  const colA=()=>({font:{bold:true,sz:9},alignment:{horizontal:'center',vertical:'center',wrapText:true},border:BORD,fill:FILL('FFFFFF')});
+  const cellFill=(fill,date)=>({border:BORD,alignment:{vertical:'top',wrapText:true},fill:FILL(date?fill:'BFBFBF')});
+  const entStyle=(e,fill)=>({font:{sz:isBold(e)?11:10,bold:isBold(e),color:{rgb:mainColor(e).replace('#','')}},alignment:{vertical:'top',wrapText:true},border:BORD,fill:FILL(fill)});
+  const txt=e=>{var t=e.t;if(e.dnote)t+=' ['+e.dnote+']';if(e.hours)t+=' '+e.hours;return t};
+  // date row
+  {const vr=[m.label.replace(' ','\n')],sr=[colA()];
+   sats.forEach(s=>{vr.push(s.date||'');sr.push(Object.assign(cellFill('FFFFFF',s.date),{font:{bold:true,sz:11,color:{rgb:'111111'}},alignment:{vertical:'top'}}))});
+   pad(vr,sr);push(vr,sr);}
+  // own (white)
+  for(let k=0;k<maxOwn;k++){const vr=[''],sr=[colA()];
+   sats.forEach(s=>{const e=s.own[k];if(e){vr.push(txt(e));sr.push(entStyle(e,'FFFFFF'))}else{vr.push('');sr.push(cellFill('FFFFFF',s.date))}});
+   pad(vr,sr);push(vr,sr);}
+  // ge (grey)
+  for(let k=0;k<maxGe;k++){const vr=[''],sr=[colA()];
+   sats.forEach(s=>{const e=s.ge[k];if(e){vr.push(txt(e));sr.push(entStyle(e,'D9D9D9'))}else{vr.push('');sr.push(cellFill('D9D9D9',s.date))}});
+   pad(vr,sr);push(vr,sr);}
+  if(blockRows>1)merges.push({s:{r:startR,c:0},e:{r:startR+blockRows-1,c:0}});
+  r+=blockRows;
  });
  const ws=XLSX.utils.aoa_to_sheet(vals);
- for(let ri=0;ri<sty.length;ri++)for(let ci=0;ci<sty[ri].length;ci++){const a=XLSX.utils.encode_cell({r:ri,c:ci});if(ws[a])ws[a].s=sty[ri][ci]}
- ws['!merges']=merges;ws['!cols']=[{wch:12},{wch:22},{wch:22},{wch:22},{wch:22},{wch:22}];
- ws['!pageSetup']={orientation:'landscape',fitToWidth:1};
+ for(let ri=0;ri<sty.length;ri++)for(let ci=0;ci<6;ci++){const a=XLSX.utils.encode_cell({r:ri,c:ci});if(!ws[a])ws[a]={t:'s',v:''};if(sty[ri]&&sty[ri][ci])ws[a].s=sty[ri][ci]}
+ ws['!merges']=merges;ws['!cols']=[{wch:12},{wch:23},{wch:23},{wch:23},{wch:23},{wch:23}];
+ ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:vals.length-1,c:5}});
+ ws['!pageSetup']={orientation:'landscape',fitToWidth:1,fitToHeight:0};
  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Μόλα');
  XLSX.writeFile(wb,'Μόλα 76 2026-2027 (επιλογή).xlsx');
 }
