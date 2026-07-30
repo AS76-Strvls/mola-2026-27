@@ -39,6 +39,7 @@ aside{width:210px;flex:none;padding:12px;position:sticky;top:80px;max-height:cal
 .addb{border:none;background:none;color:var(--mut);cursor:pointer;font-size:15px;line-height:1;padding:0 3px}
 .addb:hover{color:var(--blue)}
 .ent{display:flex;gap:5px;align-items:flex-start;font-size:12px;line-height:1.3;padding:1px 0}
+.ent.geband{background:#e9edf1;border-radius:4px;padding:1px 4px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .ent.off .lab{opacity:.32;text-decoration:line-through}
 .ent input{margin:2px 0 0;flex:none}
 .lab{cursor:pointer;flex:1}
@@ -182,7 +183,7 @@ function renderGrid(){
    const cd=document.createElement('div');cd.className='cd';cd.innerHTML='<span>'+(s.date||'')+'</span>';
    const ab=document.createElement('button');ab.className='addb';ab.textContent='+';ab.title='Προσθήκη δράσης';ab.onclick=()=>addEntry(mi,si,s.date);cd.appendChild(ab);
    cell.appendChild(cd);
-   const cdt=CELLDATE[mi+"_"+si];const inSpan=x=>{if(x.mi===mi&&x.si===si)return true;if(!cdt)return false;var sd=startDate(x);if(!sd)return false;var ed=new Date(sd);ed.setDate(ed.getDate()+(x.nights||0));return cdt>=sd&&cdt<=ed;};const list=s.entries.concat(ST.added.filter(inSpan)).concat(EXTRA.filter(inSpan));
+   const cdt=CELLDATE[mi+"_"+si];const inSpan=x=>{if(x.mi===mi&&x.si===si)return true;if(!cdt)return false;var sd=startDate(x);if(!sd)return false;var ed=new Date(sd);ed.setDate(ed.getDate()+(x.nights||0));return cdt>=sd&&cdt<=ed;};const list=s.entries.concat(ST.added.filter(inSpan)).concat(EXTRA.filter(inSpan));list.sort(function(a,b){return (a.src==='ΓΕ'?1:0)-(b.src==='ΓΕ'?1:0)});
    list.forEach(e=>{if(visible(e))cell.appendChild(entRow(e))});
    g.appendChild(cell);
   });
@@ -190,7 +191,7 @@ function renderGrid(){
  });
 }
 function entRow(e){
- const row=document.createElement('div');row.className='ent'+(selected(e)?'':' off');
+ const row=document.createElement('div');row.className='ent'+(selected(e)?'':' off')+(e.src==='ΓΕ'?' geband':'');
  const cb=document.createElement('input');cb.type='checkbox';cb.checked=selected(e);
  cb.onchange=()=>{if(cb.checked)delete ST.off[e.id];else ST.off[e.id]=1;save()};
  const lab=document.createElement('span');lab.className='lab';lab.style.color=mainColor(e);if(isBold(e))lab.style.fontWeight='600';lab.style.fontSize=sizeFor(e)+'px';
