@@ -55,6 +55,29 @@ body.edit .pen{visibility:visible}
 .tag b{cursor:pointer;font-weight:400}
 select,input[type=text]{padding:5px 7px;border:1px solid var(--bd);border-radius:6px;font-size:13px;font-family:inherit}
 .hint{color:var(--mut);font-size:11px;margin:2px 0 8px}
+.mobonly{display:none}
+@media(max-width:760px){
+ .mobonly{display:inline-flex;align-items:center}
+ header{position:static;padding:10px 12px}
+ h1{font-size:15px;line-height:1.25}
+ header .row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:3px}
+ header .row::-webkit-scrollbar{height:0}
+ header .btn{padding:7px 11px;font-size:13px}
+ .count{margin-left:8px;flex:none}
+ main{flex-direction:column}
+ aside{width:auto;position:static;max-height:46vh;border-right:none;border-bottom:1px solid var(--bd);display:none}
+ body.showfilters aside{display:block}
+ .wrap{padding:8px 10px;overflow:visible}
+ .grid{grid-template-columns:repeat(2,1fr);gap:5px}
+ .cell{min-height:auto}
+ .mlabel{font-size:13px;color:#2b3a1c}
+ .ent{font-size:13px}
+ .pen{font-size:16px;padding:0 6px}
+ .box{padding:16px 14px}
+}
+@media(max-width:520px){
+ .grid{grid-template-columns:1fr}
+}
 @media print{
  header .row,aside,.addb,.pen,.actions{display:none!important}
  header{position:static;border:none}aside{display:none}
@@ -69,6 +92,7 @@ select,input[type=text]{padding:5px 7px;border:1px solid var(--bd);border-radius
 <header>
  <h1>Πρόγραμμα Χρονιάς (Μόλα) · 76ο Σ.Π. Στροβόλου · 2026-2027 <span id='teamTag' style='font-size:12px;color:#3D5F26'></span></h1>
  <div class="row" style="margin-top:2px">
+  <button class="btn mobonly" id="filtToggle">☰ Φίλτρα</button>
   <span class="gl">Άποψη:</span>
   <button class="btn act" data-p="all">ΣΥΣΤΗΜΑ (όλα)</button>
   <button class="btn" data-p="ΑΛ">ΑΛ</button>
@@ -253,7 +277,7 @@ function updCount(){let sel=0,vis=0;eachEntry(e=>{if(visible(e)){vis++;if(select
 function save(){saveST();renderFilters();renderGrid();updCount()}
 document.querySelectorAll('header .btn[data-p]').forEach(b=>b.onclick=()=>setPreset(b.dataset.p));
 document.querySelectorAll('header .btn.src').forEach(b=>b.onclick=()=>{ST.src=b.dataset.s;document.querySelectorAll('header .btn.src').forEach(x=>x.classList.toggle('act',x===b));save()});
-document.getElementById('editBtn').onclick=function(){ST.edit=!ST.edit;document.body.classList.toggle('edit',ST.edit);this.classList.toggle('act',ST.edit)};
+document.getElementById('editBtn').onclick=function(){ST.edit=!ST.edit;document.body.classList.toggle('edit',ST.edit);this.classList.toggle('act',ST.edit)};var _ft=document.getElementById('filtToggle');if(_ft)_ft.onclick=function(){document.body.classList.toggle('showfilters');this.classList.toggle('act',document.body.classList.contains('showfilters'))};
 function molaXlsx(){
  if(typeof XLSX==='undefined'){alert('Χρειάζεται σύνδεση internet για την εξαγωγή Excel.');return}
  const BORD={top:{style:'thin',color:{rgb:'999999'}},bottom:{style:'thin',color:{rgb:'999999'}},left:{style:'thin',color:{rgb:'999999'}},right:{style:'thin',color:{rgb:'999999'}}};
